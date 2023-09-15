@@ -12,6 +12,16 @@ from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 # Optional: add contact me email functionality (Day 60)
 # import smtplib
 
+import os
+
+#from student but didnt work !!!
+#I pip something also but ı forgot to add
+#from dotenv import load_dotenv  # pip install python-dotenv
+#load_dotenv("E:/Python/EnvironmentVariables/.env")
+#USER_NAME = os.getenv("MyUsername")
+#API_KEY = os.getenv("MyAPIKey_MyOtherProject")
+#debug = bool(os.getenv("DEBUG"))
+#email_port = int(os.getenv("email_port"))
 
 '''
 Make sure the required packages are installed: 
@@ -29,6 +39,17 @@ This will install the packages from the requirements.txt for this project.
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+#wrong!! not working
+#app.config['SECRET_KEY'] = os.environ.get('FLASK_KEY')
+
+# web: gunicorn main:app -> this line of code is inside Procfile
+# This will tell our hosting provider to -> EXPALINED !!
+# create a web worker that is able to receive HTTP requests.
+# The Procfile also says to use gunicorn to serve your web app.
+# And finally it specifies the Flask app object is the main.py file.
+# That way the hosting provider knows about the entry point for the
+# app and what our app is called.
+
 ckeditor = CKEditor(app)
 Bootstrap5(app)
 
@@ -53,7 +74,8 @@ gravatar = Gravatar(app,
                     base_url=None)
 
 # CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URI", "sqlite:///posts.db")
 db = SQLAlchemy()
 db.init_app(app)
 
@@ -296,4 +318,4 @@ def contact():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    app.run(debug=False, port=5001)
